@@ -1,0 +1,252 @@
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  Typography,
+  Box,
+  Button,
+  Chip,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LaunchIcon from "@mui/icons-material/Launch";
+
+const ProjectDetail = ({ project, open, onClose }) => {
+  if (!project) return null;
+
+  const { title, description, image, background, link, demo, tech, screenshots, note } = project;
+  const hasBackground = !!background;
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          bgcolor: hasBackground ? "transparent" : "rgba(11, 24, 26, 0.98)",
+          border: "1px solid rgba(100, 255, 218, 0.3)",
+          borderRadius: "16px",
+          boxShadow: "0 0 40px rgba(100, 255, 218, 0.15)",
+          overflow: "hidden",
+        },
+      }}
+    >
+      <IconButton
+        onClick={onClose}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+          zIndex: 10,
+          color: "#64ffda",
+          "&:hover": { bgcolor: "rgba(100, 255, 218, 0.1)" },
+        }}
+        aria-label="cerrar"
+      >
+        <CloseIcon />
+      </IconButton>
+
+      <DialogContent sx={{ p: 0, overflow: "hidden", position: "relative" }}>
+        {/* Fondo personalizado por proyecto (si existe) */}
+        {hasBackground && (
+          <>
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                zIndex: 0,
+                backgroundImage: `url(${background})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                zIndex: 1,
+                background: "linear-gradient(to bottom, rgba(10, 25, 47, 0.92) 0%, rgba(10, 25, 47, 0.97) 50%, rgba(10, 25, 47, 0.98) 100%)",
+              }}
+            />
+          </>
+        )}
+
+        {/* Contenido (encima del fondo) */}
+        <Box sx={{ position: "relative", zIndex: 2 }}>
+        {/* Imagen principal */}
+        <Box
+          sx={{
+            width: "100%",
+            height: 240,
+            overflow: "hidden",
+            bgcolor: "#0a192f",
+            borderBottom: "1px solid rgba(100,255,218,0.2)",
+          }}
+        >
+          <Box
+            component="img"
+            src={image}
+            alt={title}
+            onError={(e) => {
+              e.target.src = "https://placehold.co/800x240/0a192f/64ffda?text=" + encodeURIComponent(title);
+            }}
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </Box>
+
+        <Box sx={{ px: 3, py: 2.5 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 700,
+              color: "#64ffda",
+              mb: 1.5,
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: 0.5,
+            }}
+          >
+            {title}
+          </Typography>
+
+          <Typography
+            sx={{
+              color: "#a8b2d1",
+              lineHeight: 1.75,
+              fontSize: "1.02rem",
+              mb: 2,
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            {description}
+          </Typography>
+
+          {/* Nota destacada (ej: Carta de Amor - personalizable) */}
+          {note && (
+            <Box
+              sx={{
+                mb: 2,
+                p: 1.5,
+                borderRadius: 2,
+                bgcolor: "rgba(100, 255, 218, 0.08)",
+                borderLeft: "3px solid #64ffda",
+              }}
+            >
+              <Typography sx={{ color: "#64ffda", fontSize: "0.9rem", fontFamily: "'Inter', sans-serif" }}>
+                {note}
+              </Typography>
+            </Box>
+          )}
+
+          {/* Tech chips */}
+          {tech && tech.length > 0 && (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, mb: 2 }}>
+              {tech.map((t) => (
+                <Chip
+                  key={t}
+                  label={t}
+                  size="small"
+                  sx={{
+                    bgcolor: "rgba(100, 255, 218, 0.1)",
+                    color: "#64ffda",
+                    border: "1px solid rgba(100, 255, 218, 0.4)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                />
+              ))}
+            </Box>
+          )}
+
+          {/* Screenshots mini gallery */}
+          {screenshots && screenshots.length > 0 && (
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="caption"
+                sx={{ color: "#8892b0", display: "block", mb: 1 }}
+              >
+                Capturas
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 1 }}>
+                {screenshots.map((src, i) => (
+                  <Box
+                    key={i}
+                    component="img"
+                    src={src}
+                    alt={`Captura ${i + 1}`}
+                    sx={{
+                      height: 80,
+                      width: "auto",
+                      minWidth: 120,
+                      borderRadius: 1,
+                      objectFit: "cover",
+                      border: "1px solid rgba(100, 255, 218, 0.3)",
+                      cursor: "pointer",
+                      transition: "transform 0.2s",
+                      "&:hover": { transform: "scale(1.03)" },
+                    }}
+                    onClick={() => window.open(src, "_blank")}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+
+          {/* Botones */}
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+            {link && (
+              <Button
+                component="a"
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="contained"
+                startIcon={<GitHubIcon />}
+                sx={{
+                  bgcolor: "rgba(100, 255, 218, 0.2)",
+                  color: "#64ffda",
+                  border: "1px solid #64ffda",
+                  "&:hover": {
+                    bgcolor: "rgba(100, 255, 218, 0.3)",
+                    borderColor: "#64ffda",
+                    boxShadow: "0 0 20px rgba(100, 255, 218, 0.4)",
+                  },
+                }}
+              >
+                Ver código (GitHub)
+              </Button>
+            )}
+            {demo && (
+              <Button
+                component="a"
+                href={demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="contained"
+                endIcon={<LaunchIcon />}
+                sx={{
+                  background: "linear-gradient(135deg, #64ffda, #0ff)",
+                  color: "#020508",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #0ff, #64ffda)",
+                    boxShadow: "0 0 20px rgba(100, 255, 218, 0.5)",
+                  },
+                }}
+              >
+                Ver demo
+              </Button>
+            )}
+          </Box>
+        </Box>
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default ProjectDetail;
