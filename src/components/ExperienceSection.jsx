@@ -28,25 +28,27 @@ const useCountUp = (end, duration, start) => {
   return count;
 };
 
-const StatCard = ({ value, suffix, label, index, visible }) => {
-  const displayCount = useCountUp(value, 1200, visible);
+const StatCard = ({ value, suffix, label, index, visible, isMobile = false }) => {
+  const animatedCount = useCountUp(value, 2000, visible);
+  const displayCount = isMobile ? value : animatedCount;
   return (
     <Box
       sx={{
         flex: "1 1 100px",
-        minWidth: 90,
-        maxWidth: 140,
+        minWidth: { xs: 85, md: 90 },
+        maxWidth: { xs: 130, md: 140 },
         textAlign: "center",
-        py: 2,
-        px: 2,
+        py: { xs: 1.5, md: 2 },
+        px: { xs: 1.5, md: 2 },
         borderRadius: "12px",
         border: "1px solid rgba(100, 255, 218, 0.35)",
         bgcolor: "rgba(9,48,53,0.5)",
         boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
         transition: "transform 0.4s ease, box-shadow 0.4s ease",
-        animation: visible ? "statFadeIn 0.5s ease forwards" : "none",
-        animationDelay: visible ? `${index * 120}ms` : "0ms",
-        opacity: visible ? undefined : 0,
+        animation: isMobile ? "none" : (visible ? "statFadeIn 0.5s ease forwards" : "none"),
+        animationDelay: isMobile ? "0ms" : (visible ? `${index * 120}ms` : "0ms"),
+        opacity: isMobile ? 1 : (visible ? undefined : 0),
+        overflow: "hidden",
         "&:hover": {
           transform: "translateY(-4px)",
           boxShadow: "0 8px 28px rgba(100, 255, 218, 0.2)",
@@ -54,17 +56,26 @@ const StatCard = ({ value, suffix, label, index, visible }) => {
         },
       }}
     >
-      <Typography sx={{ fontSize: "1.75rem", fontWeight: 700, color: "#64ffda", fontVariantNumeric: "tabular-nums" }}>
+      <Typography sx={{ fontSize: { xs: "1.5rem", md: "1.75rem" }, fontWeight: 700, color: "#64ffda", fontVariantNumeric: "tabular-nums" }}>
         {displayCount}{suffix}
       </Typography>
-      <Typography sx={{ fontSize: "0.8rem", color: "#8892b0", mt: 0.5 }}>
+      <Typography
+        sx={{
+          fontSize: { xs: "0.7rem", md: "0.8rem" },
+          color: "#8892b0",
+          mt: 0.5,
+          wordBreak: "break-word",
+          overflowWrap: "break-word",
+          lineHeight: 1.3,
+        }}
+      >
         {label}
       </Typography>
     </Box>
   );
 };
 
-const ExperienceSection = ({ technologies }) => {
+const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef, highlightedSection }) => {
   const sectionRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -72,6 +83,7 @@ const ExperienceSection = ({ technologies }) => {
 
   useEffect(() => {
     const el = sectionRef.current;
+    const root = isMobile && scrollContainerRef?.current ? scrollContainerRef.current : null;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -83,14 +95,31 @@ const ExperienceSection = ({ technologies }) => {
           }
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.02, root }
     );
     observer.observe(el);
-    return () => observer.disconnect();
-  }, [hasAnimated]);
+    const fallback = isMobile ? setTimeout(() => {
+      setSectionVisible(true);
+      setStatsVisible(true);
+      setHasAnimated(true);
+    }, 800) : null;
+    return () => {
+      observer.disconnect();
+      if (fallback) clearTimeout(fallback);
+    };
+  }, [hasAnimated, isMobile, scrollContainerRef]);
 
+  const isHighlighted = isMobile && highlightedSection === "experience";
   return (
-    <section ref={sectionRef} id="experience" style={{ marginBottom: "1rem", minHeight: "100vh" }}>
+    <section
+      ref={sectionRef}
+      id="experience"
+      style={{
+        marginBottom: "1rem",
+        minHeight: "100vh",
+        animation: isHighlighted ? "sectionSlideDown 0.5s ease-out" : undefined,
+      }}
+    >
       <Typography
         variant="overline"
         sx={{
@@ -100,7 +129,7 @@ const ExperienceSection = ({ technologies }) => {
           fontSize: { xs: "1.05rem", md: "1.15rem" },
           fontWeight: 500,
           mb: 2,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.5s ease-out forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
         }}
       >
@@ -113,7 +142,7 @@ const ExperienceSection = ({ technologies }) => {
           pl: 2.5,
           py: 1.25,
           mb: 2,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out 0.1s forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards" : "fadeInUp 0.5s ease-out 0.1s forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
         }}
       >
@@ -124,6 +153,8 @@ const ExperienceSection = ({ technologies }) => {
             maxWidth: 800,
             color: "#ccd6f6",
             mb: 2,
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
           }}
         >
           Inicié mi carrera en el sector tecnológico en 2022, enfocándome inicialmente en la infraestructura y el soporte técnico especializado. Esta etapa fue fundamental para desarrollar mi capacidad de análisis crítico y diagnóstico de sistemas. Posteriormente, evolucioné hacia el desarrollo Full Stack, trabajando en empresas como Quion Bolivia y JUSTO Solutions, donde he construido aplicaciones web escalables y accesibles utilizando el stack de React y Node.js.
@@ -134,6 +165,8 @@ const ExperienceSection = ({ technologies }) => {
             lineHeight: 1.7,
             maxWidth: 800,
             color: "#ccd6f6",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
           }}
         >
           Mi trabajo se caracteriza por un equilibrio entre el mantenimiento preventivo y la creación de nuevas funcionalidades digitales. En mi rol de soporte e infraestructura, logré una reducción del 30% en incidentes tecnológicos, optimizando los recursos de hardware y software de la organización. Hoy, aplico esa misma rigurosidad técnica al desarrollo frontend, asegurando que cada interfaz sea responsiva, rápida y esté lista para los desafíos del mercado actual.
@@ -150,7 +183,7 @@ const ExperienceSection = ({ technologies }) => {
           fontSize: "0.85rem",
           mb: 1.5,
           mt: 3,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out 0.18s forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards" : "fadeInUp 0.5s ease-out 0.18s forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
         }}
       >
@@ -166,7 +199,7 @@ const ExperienceSection = ({ technologies }) => {
           },
           gap: { xs: 1, sm: 1.5, md: 2 },
           mb: 3,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out 0.22s forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.22s forwards" : "fadeInUp 0.5s ease-out 0.22s forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
         }}
       >
@@ -253,7 +286,7 @@ const ExperienceSection = ({ technologies }) => {
           fontSize: "0.85rem",
           mb: 1.5,
           mt: 1,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out 0.25s forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards" : "fadeInUp 0.5s ease-out 0.25s forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
         }}
       >
@@ -267,7 +300,7 @@ const ExperienceSection = ({ technologies }) => {
           position: "relative",
           mt: 2,
           mb: 3,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out 0.25s forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards" : "fadeInUp 0.5s ease-out 0.25s forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
           "&::before, &::after": {
             content: '""',
@@ -351,7 +384,7 @@ const ExperienceSection = ({ technologies }) => {
           fontSize: "0.85rem",
           mb: 1.5,
           mt: 3,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out 0.35s forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards" : "fadeInUp 0.5s ease-out 0.35s forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
         }}
       >
@@ -360,7 +393,7 @@ const ExperienceSection = ({ technologies }) => {
       <Box
         sx={{
           display: "flex",
-          gap: { xs: 2, md: 3 },
+          gap: { xs: 1.5, md: 3 },
           mt: 2,
           mb: 3,
           flexWrap: "wrap",
@@ -368,7 +401,7 @@ const ExperienceSection = ({ technologies }) => {
         }}
       >
         {stats.map(({ value, suffix, label }, i) => (
-          <StatCard key={label} value={value} suffix={suffix} label={label} index={i} visible={statsVisible} />
+          <StatCard key={label} value={value} suffix={suffix} label={label} index={i} visible={statsVisible} isMobile={isMobile} />
         ))}
       </Box>
 
@@ -379,7 +412,7 @@ const ExperienceSection = ({ technologies }) => {
           gap: { xs: 3, md: 4 },
           alignItems: "flex-start",
           mt: 2,
-          animation: sectionVisible ? "fadeInUp 0.5s ease-out 0.5s forwards" : "none",
+          animation: sectionVisible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards" : "fadeInUp 0.5s ease-out 0.5s forwards") : "none",
           opacity: sectionVisible ? undefined : 0,
         }}
       >
@@ -398,7 +431,7 @@ const ExperienceSection = ({ technologies }) => {
         >
           <Box
             component="a"
-            href="/CV-Full-Stack.pdf"
+            href="/cv%20actualizado.pdf"
             target="_blank"
             rel="noopener noreferrer"
             sx={{
@@ -462,6 +495,8 @@ const ExperienceSection = ({ technologies }) => {
                 lineHeight: 1.65,
                 color: "#a8b2d1",
                 mb: 1,
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
               }}
             >
               Mi enfoque combina diseño centrado en el usuario con desarrollo
@@ -472,6 +507,8 @@ const ExperienceSection = ({ technologies }) => {
                 fontSize: { xs: "1rem", md: "1.05rem" },
                 lineHeight: 1.65,
                 color: "#8892b0",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
               }}
             >
               Priorizo la comunicación clara, iteraciones rápidas y código mantenible.

@@ -7,25 +7,37 @@ const ProjectsSection = ({
   onProjectClick,
   isMobile,
   isTablet,
+  scrollContainerRef,
+  highlightedSection,
 }) => {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
+    const root = isMobile && scrollContainerRef?.current ? scrollContainerRef.current : null;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
       },
-      { threshold: 0.15 }
+      { threshold: isMobile ? 0.05 : 0.15, root }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [isMobile, scrollContainerRef]);
 
+  const isHighlighted = isMobile && highlightedSection === "projects";
   return (
-    <section ref={sectionRef} id="projects" style={{ minHeight: "100vh", marginBottom: "4rem" }}>
+    <section
+      ref={sectionRef}
+      id="projects"
+      style={{
+        minHeight: "100vh",
+        marginBottom: "4rem",
+        animation: isHighlighted ? "sectionSlideDown 0.5s ease-out" : undefined,
+      }}
+    >
       <Typography
         variant="overline"
         sx={{
@@ -35,7 +47,7 @@ const ProjectsSection = ({
           fontSize: { xs: "1.05rem", md: "1.15rem" },
           fontWeight: 500,
           mb: 2,
-          animation: visible ? "fadeInUp 0.5s ease-out forwards" : "none",
+          animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.5s ease-out forwards") : "none",
           opacity: visible ? undefined : 0,
         }}
       >
@@ -50,7 +62,7 @@ const ProjectsSection = ({
           fontFamily: "'Inter', sans-serif",
           color: "#8892b0",
           fontSize: { xs: "0.95rem", md: "1rem" },
-          animation: visible ? "fadeInUp 0.5s ease-out 0.1s forwards" : "none",
+          animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards" : "fadeInUp 0.5s ease-out 0.1s forwards") : "none",
           opacity: visible ? undefined : 0,
         }}
       >
@@ -82,7 +94,7 @@ const ProjectsSection = ({
                 gap: { xs: 2, md: 3 },
                 mb: 0,
                 position: "relative",
-                animation: visible ? "fadeInUp 0.6s ease-out forwards" : "none",
+                animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.6s ease-out forwards") : "none",
                 animationDelay: visible ? `${0.2 + index * 0.12}s` : "0ms",
                 opacity: visible ? undefined : 0,
               }}

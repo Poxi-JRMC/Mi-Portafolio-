@@ -27,6 +27,7 @@ export default function ProjectCard({ title, description, image, sxCard }) {
           height="220"
           image={image}
           alt={title}
+          loading="lazy"
           sx={{
             transition: 'transform 0.5s ease, filter 0.4s ease',
             '&:hover': {

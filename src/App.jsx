@@ -25,8 +25,13 @@ import {
   aboutBlocks,
   technologies,
 } from './data/constants'
-
 import './App.css'
+
+const SIDEBAR_STRINGS = [
+  'ING. Johan Raul Mamani Cañari',
+  'Desarrollador Full Stack 💻',
+  'Apasionado por la tecnología 🚀',
+]
 
 export default function App() {
   const sendEmail = (e) => {
@@ -58,41 +63,40 @@ export default function App() {
   const [menuSlideDown, setMenuSlideDown] = useState(false)
   const [typewriterReady, setTypewriterReady] = useState(false)
   const [cycleStarted, setCycleStarted] = useState(false)
+  const [logoLoaded, setLogoLoaded] = useState(false)
+  const [highlightedSection, setHighlightedSection] = useState(null)
+  const [appReady, setAppReady] = useState(false)
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'))
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+
+  useEffect(() => {
+    const t = setTimeout(() => setAppReady(true), 2000)
+    return () => clearTimeout(t)
+  }, [])
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'), { noSsr: true })
   const rafRef = useRef(null)
   const lastPosRef = useRef({ x: 0, y: 0 })
   const mainRef = useRef(null)
+  const scrollContainerRef = useRef(null)
 
-  // Scroll spy: actualiza el menú según la sección visible
+  // Scroll spy: cuando el contenido está montado (appReady)
   useEffect(() => {
-    const main = mainRef.current
-    if (!main) return
-
+    if (!appReady) return
     const sectionIds = ['about', 'experience', 'projects', 'contacto']
+    const els = sectionIds.map((id) => document.getElementById(id)).filter(Boolean)
+    if (els.length === 0) return
 
-    const updateActive = () => {
-      const scrollTop = main.scrollTop
-      let activeId = 'about'
-
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sectionIds[i])
-        if (!el) continue
-        const sectionTop = el.offsetTop
-        const threshold = 120
-        if (scrollTop >= sectionTop - threshold) {
-          activeId = sectionIds[i]
-          break
-        }
-      }
-      setActive(activeId)
-    }
-
-    main.addEventListener('scroll', updateActive)
-    updateActive()
-    return () => main.removeEventListener('scroll', updateActive)
-  }, [])
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id)
+        })
+      },
+      { root: null, rootMargin: '-15% 0px -60% 0px', threshold: 0 }
+    )
+    els.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [appReady])
 
   // Efecto del cursor con throttle vía requestAnimationFrame
   useEffect(() => {
@@ -111,27 +115,34 @@ export default function App() {
     }
   }, [])
 
-  // Delay antes de que empiece el typewriter; luego el menú baja
+  // Delay typewriter y menú (visible pronto tras splash)
   useEffect(() => {
-    const t1 = setTimeout(() => setTypewriterReady(true), 1000)
-    const t2 = setTimeout(() => setMenuSlideDown(true), 1400)
+    const t1 = setTimeout(() => setTypewriterReady(true), 300)
+    const t2 = setTimeout(() => setMenuSlideDown(true), 500)
     return () => {
       clearTimeout(t1)
       clearTimeout(t2)
     }
   }, [])
 
-  // Primera carga: misma posición que al hacer clic en "Más sobre mí"
+  // Primera carga: scroll cuando el contenido está listo
   useEffect(() => {
+    if (!appReady) return
     const t = setTimeout(() => {
-      const el = document.getElementById('about')
-      if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' })
-    }, 100)
+      if (isMobile) {
+        const el = scrollContainerRef.current
+        if (el) el.scrollTo({ top: 0, behavior: 'auto' })
+      } else {
+        const el = document.getElementById('about')
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 300)
     return () => clearTimeout(t)
-  }, [])
+  }, [appReady, isMobile])
 
-  // Ciclo de visibilidad solo para sidebar (logo, typewriter, redes)
+  // Ciclo de visibilidad solo para sidebar (logo, typewriter, redes). En móvil: siempre visible.
   useEffect(() => {
+    if (isMobile) return
     let exitTimeout
     let enterTimeout
 
@@ -149,13 +160,17 @@ export default function App() {
       clearTimeout(exitTimeout)
       clearTimeout(enterTimeout)
     }
-  }, [])
+  }, [isMobile])
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id)
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
       setActive(id)
+      if (isMobile) {
+        setHighlightedSection(id)
+        setTimeout(() => setHighlightedSection(null), 500)
+      }
     }
   }
 
@@ -164,7 +179,65 @@ export default function App() {
   }
 
   return (
-    <>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#121212', position: 'relative' }}>
+      {/* Splash: exactamente 2000 ms, animación suave, luego se oculta */}
+      <Box
+        sx={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 99999,
+          bgcolor: '#121212',
+          display: appReady ? 'none' : 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2,
+          pointerEvents: appReady ? 'none' : 'auto',
+        }}
+      >
+        <Box
+          component="img"
+          src="/jrmc.png"
+          alt="Logo"
+          sx={{
+            width: 100,
+            height: 'auto',
+            filter: 'drop-shadow(0 0 20px rgba(100, 255, 218, 0.5))',
+            animation: 'splashZoom 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+          }}
+        />
+        <Typography
+          sx={{
+            color: '#64ffda',
+            fontSize: '1.3rem',
+            fontWeight: 600,
+            letterSpacing: 3,
+            opacity: 0,
+            animation: 'splashZoom 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards',
+            animationFillMode: 'forwards',
+          }}
+        >
+          Mi Portafolio
+        </Typography>
+      </Box>
+
+      {/* Contenido principal: siempre montado, visible solo tras el splash */}
+      <Box
+        ref={scrollContainerRef}
+        sx={{
+          minHeight: '100vh',
+          visibility: appReady ? 'visible' : 'hidden',
+          opacity: appReady ? 1 : 0,
+          transition: 'opacity 0.4s ease-out',
+          bgcolor: '#121212',
+          ...(isMobile && {
+            height: '100vh',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            WebkitOverflowScrolling: 'touch',
+          }),
+        }}
+      >
       <Box
         sx={{
           position: 'fixed',
@@ -188,17 +261,25 @@ export default function App() {
             top: isMobile ? 0 : 100,      // posición vertical (px desde arriba)
             left: isMobile ? 0 : 190,     // posición horizontal (px desde la izquierda)
             width: isMobile ? '100%' : 200,  // ancho del contenedor
+            minHeight: isMobile ? '100vh' : undefined,  // móvil: menú ocupa primera pantalla
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'flex-start',
-            px: 5,   // padding horizontal del contenedor
-            py: 5,   // padding vertical del contenedor
+            justifyContent: isMobile ? 'center' : 'flex-start',
+            px: isMobile ? 2 : 5,
+            py: isMobile ? 3 : 5,
             zIndex: 10,
             bgcolor: isMobile ? '#121212' : 'transparent',
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
             <Box
               sx={{
                 position: 'relative',
@@ -206,39 +287,41 @@ export default function App() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 width: '100%',
+                mt: isMobile ? 4 : 0,
               }}
             >
-              {/* SVG órbitas: animación de entrada */}
+              {/* SVG órbitas: mismo tamaño en móvil/PC, más visibles, detrás de la foto */}
               <Box
                 sx={{
                   position: 'absolute',
                   top: '48%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  width: { xs: 250, sm: 300, md: 350 },
-                  height: { xs: 250, sm: 300, md: 350 },
-                  zIndex: 1,
+                  width: { xs: 260, sm: 300, md: 350 },
+                  height: { xs: 260, sm: 300, md: 350 },
+                  zIndex: 0,
                   pointerEvents: 'none',
+                  opacity: 0.85,
                   animation: 'entranceElectrons 1.2s cubic-bezier(0.22, 1, 0.36, 1) both',
                 }}
               >
                 <svg viewBox="0 0 200 200" style={{ width: '100%', height: '100%' }}>
-                  <circle cx="30" cy="40" r="1.5" fill="#0ff" opacity="0.6">
+                  <circle cx="30" cy="40" r="1.5" fill="#0ff" opacity="0.8">
                     <animate attributeName="cy" values="40;38;40" dur="4s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx="160" cy="150" r="2" fill="#0ff" opacity="0.5">
+                  <circle cx="160" cy="150" r="2" fill="#0ff" opacity="0.75">
                     <animate attributeName="cy" values="150;148;150" dur="3s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx="100" cy="180" r="1.2" fill="#0ff" opacity="0.4">
+                  <circle cx="100" cy="180" r="1.2" fill="#0ff" opacity="0.7">
                     <animate attributeName="r" values="1.2;1.8;1.2" dur="2s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx="45" cy="165" r="1.8" fill="#0ff" opacity="0.55">
+                  <circle cx="45" cy="165" r="1.8" fill="#0ff" opacity="0.8">
                     <animate attributeName="cx" values="45;47;45" dur="3.5s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx="170" cy="55" r="1.4" fill="#0ff" opacity="0.45">
-                    <animate attributeName="opacity" values="0.45;0.7;0.45" dur="2.5s" repeatCount="indefinite" />
+                  <circle cx="170" cy="55" r="1.4" fill="#0ff" opacity="0.75">
+                    <animate attributeName="opacity" values="0.75;0.95;0.75" dur="2.5s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx="75" cy="25" r="1.6" fill="rgba(0, 255, 255, 0.6)">
+                  <circle cx="75" cy="25" r="1.6" fill="rgba(0, 255, 255, 0.85)">
                     <animate attributeName="cy" values="25;28;25" dur="4.5s" repeatCount="indefinite" />
                   </circle>
                   <g style={{ transformOrigin: '100px 100px', animation: 'rotate 6s linear infinite' }}>
@@ -262,19 +345,20 @@ export default function App() {
 
               {/* FOTO: primera carga = entrancePhoto; después del ciclo = Fade */}
               {!cycleStarted ? (
-                <Box sx={{ display: 'inline-block' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mt: isMobile ? 2 : 0 }}>
                   <Box
                     component="img"
                     src="/logo2.png"
                     alt="Mi pose"
+                    fetchPriority="high"
                     sx={{
                       position: 'relative',
-                      height: { xs: 180, sm: 240, md: 280 },
+                      height: { xs: 200, sm: 240, md: 280 },
                       width: 'auto',
                       borderRadius: 5,
                       objectFit: 'contain',
-                      ml: 3,
-                      mt: -6,
+                      ml: isMobile ? 1.5 : 3,
+                      mt: isMobile ? -4 : -6,
                       zIndex: 2,
                       animation: 'entrancePhoto 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both',
                       transition: 'transform 0.3s ease, filter 0.3s ease',
@@ -288,19 +372,20 @@ export default function App() {
                 </Box>
               ) : (
                 <Fade in={sidebarVisible} timeout={{ enter: 2200, exit: 2200 }}>
-                  <Box sx={{ display: 'inline-block' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                     <Box
                       component="img"
                       src="/logo2.png"
                       alt="Mi pose"
+                      fetchPriority="high"
                       sx={{
                         position: 'relative',
-                        height: { xs: 180, sm: 240, md: 280 },
+                        height: { xs: 200, sm: 240, md: 280 },
                         width: 'auto',
                         borderRadius: 5,
                         objectFit: 'contain',
-                        ml: 3,
-                        mt: -7,
+                        ml: isMobile ? 0 : 3,
+                        mt: isMobile ? -4 : -7,
                         zIndex: 2,
                         transition: 'transform 0.3s ease, filter 0.3s ease',
                         filter: 'drop-shadow(0 0 8px rgba(100, 255, 218, 0.9)) drop-shadow(0 0 10px rgba(100, 255, 218, 0.9))',
@@ -318,58 +403,69 @@ export default function App() {
             {/* Espacio del texto: mt = separación foto–texto; py = padding; mb = espacio antes del menú */}
             <Box
               sx={{
-                width: '170%',
-                height: '3.6em',
+                width: isMobile ? '100%' : '170%',
+                height: isMobile ? 'auto' : '3.6em',
+                minHeight: isMobile ? '4em' : undefined,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                mt: 2,   // separación entre foto y texto (aumentar para más espacio)
-                py: 6,
-                mb: 3,
+                mt: isMobile ? 2 : 2,
+                py: isMobile ? 1.5 : 6,
+                mb: isMobile ? 1.5 : 3,
               }}
             >
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{
-                  fontWeight: 600,
-                  color: '#64ffda',
-                  letterSpacing: 1,
-                  fontFamily: 'monospace',
-                  fontSize: '1.2rem',
-                  width: '100%',
-                  lineHeight: 1.3,
-                  whiteSpace: 'pre-wrap',
-                  wordWrap: 'break-word',
-                }}
-              >
-                {typewriterReady && (
-                  <Typewriter
-                    options={{
-                      strings: [
-                        'ING. Johan Raul Mamani Cañari',
-                        'Desarrollador Full Stack 💻',
-                        'Apasionado por la tecnología 🚀',
-                      ],
-                      autoStart: true,
-                      loop: true,
-                      delay: 80,
-                      deleteSpeed: 40,
-                    }}
-                  />
-                )}
-              </Typography>
+              <Box sx={{ width: '100%', textAlign: 'center' }}>
+                <Typography
+                  variant="h6"
+                  align="center"
+                  component="div"
+                  sx={{
+                    fontWeight: 600,
+                    color: '#64ffda',
+                    letterSpacing: 1,
+                    fontFamily: 'monospace',
+                    fontSize: { xs: '0.9rem', md: '1.2rem' },
+                    width: '100%',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {typewriterReady && (
+                    isMobile ? (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.3 }}>
+                        {SIDEBAR_STRINGS.map((s) => (
+                          <span key={s}>{s}</span>
+                        ))}
+                      </Box>
+                    ) : (
+                      <Typewriter
+                        options={{
+                          strings: [
+                            'ING. Johan Raul Mamani Cañari',
+                            'Desarrollador Full Stack 💻',
+                            'Apasionado por la tecnología 🚀',
+                          ],
+                          autoStart: true,
+                          loop: true,
+                          delay: 140,
+                          deleteSpeed: 60,
+                        }}
+                      />
+                    )
+                  )}
+                </Typography>
+              </Box>
             </Box>
 
             {/* MENÚ: empieza arriba (debajo de la foto); al aparecer la primera letra baja y se fija */}
             <Box
               sx={{
-                width: '170%',
+                width: isMobile ? '100%' : '170%',
                 transform: menuSlideDown ? 'translateY(0)' : 'translateY(-4.5em)',
                 transition: 'transform 0.5s ease-out',
+                mt: isMobile ? 0.5 : 0,
               }}
             >
-              <Stack spacing={2} sx={{ width: '100%', mt: -2 }}>
+              <Stack spacing={isMobile ? 0.75 : 2} sx={{ width: '100%', mt: isMobile ? 0 : -2 }}>
               {menuItems.map(({ id, label, icon }) => (
                 <Box
                   key={id}
@@ -378,15 +474,15 @@ export default function App() {
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 2,           // espacio entre icono y texto
-                    px: 2.5,          // padding horizontal (ancho del botón)
-                    py: 1.2,          // padding vertical (alto del botón)
+                    gap: isMobile ? 1.5 : 2,
+                    px: isMobile ? 2 : 2.5,
+                    py: isMobile ? 0.9 : 1.2,
                     borderRadius: 3,
                     position: 'relative',
                     bgcolor: active === id ? 'rgba(100,255,218,0.1)' : 'transparent',
                     color: active === id ? '#64ffda' : '#8892b0',
                     fontWeight: active === id ? 'bold' : 400,
-                    fontSize: '0.95rem',   // tamaño del texto del menú
+                    fontSize: { xs: '0.85rem', md: '0.95rem' },
                     letterSpacing: '0.09em',
                     textTransform: 'uppercase',
                     transition: 'all 0.3s ease',
@@ -420,10 +516,12 @@ export default function App() {
               direction="row"
               spacing={1}
               sx={{
-                width: '170%',
+                width: isMobile ? '100%' : '170%',
                 alignItems: 'center',
-                justifyContent: 'flex-start',
-                mt: 4,
+                justifyContent: 'center',
+                mt: isMobile ? 2.5 : 4,
+                mb: isMobile ? 4 : 0,
+                pb: isMobile ? 2 : 0,
                 flexWrap: 'nowrap',
               }}
             >
@@ -459,22 +557,24 @@ export default function App() {
           mt: isMobile ? 2 : 1,
           px: isMobile ? 3 : 24,
           py: -4,
-          height: '100vh',
-          overflowY: 'auto',
+          height: isMobile ? 'auto' : '100vh',
+          overflowY: isMobile ? 'visible' : 'auto',
           color: '#ccd6f6',
           fontFamily: "'Inter', sans-serif",
           scrollBehavior: 'smooth',
         }}
       >
-        <AboutSection aboutBlocks={aboutBlocks} />
-        <ExperienceSection technologies={technologies} />
+        <AboutSection aboutBlocks={aboutBlocks} isMobile={isMobile} scrollContainerRef={scrollContainerRef} highlightedSection={highlightedSection} />
+        <ExperienceSection technologies={technologies} isMobile={isMobile} scrollContainerRef={scrollContainerRef} highlightedSection={highlightedSection} />
         <ProjectsSection
           proyectosData={proyectosData}
           onProjectClick={onProjectClick}
           isMobile={isMobile}
           isTablet={isTablet}
+          scrollContainerRef={scrollContainerRef}
+          highlightedSection={highlightedSection}
         />
-        <ContactSection sendEmail={sendEmail} />
+        <ContactSection sendEmail={sendEmail} isMobile={isMobile} scrollContainerRef={scrollContainerRef} highlightedSection={highlightedSection} />
         <Footer />
       </Box>
 
@@ -483,6 +583,7 @@ export default function App() {
         open={!!selectedProject}
         onClose={() => setSelectedProject(null)}
       />
-    </>
+      </Box>
+    </Box>
   )
 }

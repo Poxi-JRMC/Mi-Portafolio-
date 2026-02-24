@@ -41,6 +41,32 @@
   }
 }
 
+@keyframes fadeInUpMobile {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sectionHighlightMobile {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(100, 255, 218, 0.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sectionSlideDown {
+  from {
+    transform: translateY(-16px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 @keyframes menuSlideDown {
   from {
     opacity: 0;
@@ -105,8 +131,44 @@
   }
 }
 
-html, body {
+@keyframes splashZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splashFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Fix Typewriter overflow en móvil */
+.Typewriter__wrapper {
+  white-space: normal !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+html {
   overflow: hidden;
-  height: 100%;
+  min-height: 100%;
+}
+body {
+  overflow: hidden;
+  min-height: 100vh;
+  background-color: #121212;
+}
+#root {
+  min-height: 100vh;
+  display: block;
 }
 

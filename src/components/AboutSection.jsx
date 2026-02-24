@@ -1,26 +1,38 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 
-const AboutSection = ({ aboutBlocks }) => {
+const AboutSection = ({ aboutBlocks, isMobile = false, scrollContainerRef, highlightedSection }) => {
   const theme = useTheme();
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
+    const root = isMobile && scrollContainerRef?.current ? scrollContainerRef.current : null;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
       },
-      { threshold: 0.15 }
+      { threshold: isMobile ? 0.05 : 0.15, root }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [isMobile, scrollContainerRef]);
 
+  const isHighlighted = isMobile && highlightedSection === "about";
   return (
-    <section ref={sectionRef} id="about" style={{ marginBottom: "1rem", width: "100%", maxWidth: "100%", minHeight: "100vh" }}>
+    <section
+      ref={sectionRef}
+      id="about"
+      style={{
+        marginBottom: "1rem",
+        width: "100%",
+        maxWidth: "100%",
+        minHeight: "100vh",
+        animation: isHighlighted ? "sectionSlideDown 0.5s ease-out" : undefined,
+      }}
+    >
       <Typography
         variant="overline"
         sx={{
@@ -30,7 +42,7 @@ const AboutSection = ({ aboutBlocks }) => {
           fontSize: { xs: "1.05rem", md: "1.15rem" },
           fontWeight: 500,
           mb: 2,
-          animation: visible ? "fadeInUp 0.5s ease-out forwards" : "none",
+          animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.5s ease-out forwards") : "none",
           opacity: visible ? undefined : 0,
         }}
       >
@@ -42,7 +54,7 @@ const AboutSection = ({ aboutBlocks }) => {
           key={id}
           sx={{
             display: "flex",
-            animation: visible ? "fadeInUp 0.6s ease-out forwards" : "none",
+            animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.6s ease-out forwards") : "none",
             animationDelay: visible ? `${i * 0.15}s` : "0ms",
             opacity: visible ? undefined : 0,
             flexDirection: i % 2 === 0 ? "row" : "row-reverse",
@@ -79,6 +91,8 @@ const AboutSection = ({ aboutBlocks }) => {
                   lineHeight: 1.7,
                   whiteSpace: "normal",
                   color: "#ccd6f6",
+                  wordBreak: "break-word",
+                  overflowWrap: "break-word",
                 }}
               >
                 {text}
@@ -110,7 +124,7 @@ const AboutSection = ({ aboutBlocks }) => {
               component="img"
               src={img}
               alt={alt}
-              loading="lazy"
+              loading={i === 0 ? "eager" : "lazy"}
               sx={{
                 width: "100%",
                 borderRadius: "12px",

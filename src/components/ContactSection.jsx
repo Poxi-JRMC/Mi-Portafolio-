@@ -16,25 +16,33 @@ const inputSx = {
   "& .MuiInputLabel-root.Mui-focused": { color: "#64ffda" },
 };
 
-export const ContactSection = ({ sendEmail }) => {
+export const ContactSection = ({ sendEmail, isMobile = false, scrollContainerRef, highlightedSection }) => {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
+    const root = isMobile && scrollContainerRef?.current ? scrollContainerRef.current : null;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
       },
-      { threshold: 0.15 }
+      { threshold: isMobile ? 0.05 : 0.15, root }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [isMobile, scrollContainerRef]);
 
+  const isHighlighted = isMobile && highlightedSection === "contacto";
   return (
-    <section ref={sectionRef} id="contacto">
+    <section
+      ref={sectionRef}
+      id="contacto"
+      style={{
+        animation: isHighlighted ? "sectionSlideDown 0.5s ease-out" : undefined,
+      }}
+    >
       <Box
         sx={{
           minHeight: "100vh",
@@ -49,7 +57,7 @@ export const ContactSection = ({ sendEmail }) => {
           sx={{
             width: "100%",
             maxWidth: 580,
-            animation: visible ? "fadeInUp 0.6s ease-out forwards" : "none",
+            animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.6s ease-out forwards") : "none",
             opacity: visible ? undefined : 0,
             bgcolor: "rgba(11, 24, 26, 0.95)",
             border: "1px solid rgba(100, 255, 218, 0.4)",
@@ -78,28 +86,51 @@ export const ContactSection = ({ sendEmail }) => {
           >
             Contáctame
           </Typography>
-          <Typography
-            align="center"
+          <Box
             sx={{
               mb: 2,
-              color: "#8892b0",
-              fontSize: "0.95rem",
-              fontFamily: "'Inter', sans-serif",
+              width: "100%",
+              maxWidth: "100%",
+              overflow: "hidden",
+              textAlign: "center",
+              "& .Typewriter__wrapper": {
+                whiteSpace: "normal !important",
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+              },
+              "& .Typewriter__cursor": {
+                whiteSpace: "normal !important",
+              },
             }}
           >
-            <Typewriter
-              options={{
-                strings: [
-                  "Hagamos realidad tu proyecto 🚀",
-                  "Desarrollo web a tu medida 🌐",
-                ],
-                autoStart: true,
-                loop: true,
-                delay: 120,
-                cursor: "|",
+            <Typography
+              component="span"
+              sx={{
+                display: "block",
+                color: "#8892b0",
+                fontSize: { xs: "0.9rem", md: "0.95rem" },
+                fontFamily: "'Inter', sans-serif",
               }}
-            />
-          </Typography>
+            >
+              {isMobile ? (
+                "Hagamos realidad tu proyecto 🚀"
+              ) : (
+                <Typewriter
+                  options={{
+                    strings: [
+                      "Hagamos realidad tu proyecto 🚀",
+                      "Desarrollo web a tu medida 🌐",
+                    ],
+                    autoStart: true,
+                    loop: true,
+                    delay: 280,
+                    deleteSpeed: 50,
+                    cursor: "|",
+                  }}
+                />
+              )}
+            </Typography>
+          </Box>
 
           <form id="contact-form" onSubmit={sendEmail}>
             <TextField
