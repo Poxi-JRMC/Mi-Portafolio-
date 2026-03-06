@@ -35,13 +35,16 @@ const SIDEBAR_STRINGS = [
 export default function App() {
   const sendEmail = (e) => {
     e.preventDefault()
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    console.log('EmailJS vars:', { serviceId, templateId, publicKey: publicKey ? 'OK' : 'UNDEFINED' })
+    if (!serviceId || !templateId || !publicKey) {
+      alert('Error de configuración: variables de entorno no encontradas')
+      return
+    }
     emailjs
-      .sendForm(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        e.target,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      )
+      .sendForm(serviceId, templateId, e.target, publicKey)
       .then(
         (result) => {
           console.log('Mensaje enviado ✅', result.text)
@@ -49,7 +52,7 @@ export default function App() {
           e.target.reset()
         },
         (error) => {
-          console.log('Error ❌', error.text)
+          console.log('Error ❌ completo:', error)
           alert('Ocurrió un error, intenta de nuevo')
         }
       )
