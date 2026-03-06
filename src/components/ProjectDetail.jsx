@@ -49,7 +49,7 @@ const ProjectDetail = ({ project, open, onClose }) => {
         <CloseIcon />
       </IconButton>
 
-      <DialogContent sx={{ p: 0, overflow: "hidden", position: "relative" }}>
+      <DialogContent sx={{ p: 0, overflow: "auto", position: "relative" }}>
         {/* Fondo personalizado por proyecto (si existe) */}
         {hasBackground && (
           <>
