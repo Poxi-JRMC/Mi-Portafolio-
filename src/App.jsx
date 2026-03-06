@@ -220,6 +220,21 @@ export default function App() {
         </Typography>
       </Box>
 
+      {/* Efecto cursor neon: fuera del contenedor para no quedar tapado por bgcolor */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+          background: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(100,255,218,0.25) 0%, rgba(100,255,218,0.10) 25%, transparent 55%)`,
+          transition: 'background 0.08s',
+          zIndex: 5,
+        }}
+      />
+
       {/* Contenido principal: siempre montado, visible solo tras el splash */}
       <Box
         ref={scrollContainerRef}
@@ -235,20 +250,6 @@ export default function App() {
           }),
         }}
       >
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          bgcolor: '#121212',
-          pointerEvents: 'none',
-          background: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(100,255,218,0.22) 0%, rgba(100,255,218,0.08) 30%, transparent 60%)`,
-          transition: 'background 0.1s',
-          zIndex: -1,
-        }}
-      />
 
       {/* CONTENEDOR DEL MENÚ LATERAL: posición = top, left | tamaño = width */}
         <Box
