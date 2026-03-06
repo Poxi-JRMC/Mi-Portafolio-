@@ -94,8 +94,8 @@ const ProjectsSection = ({
                 gap: { xs: 2, md: 3 },
                 mb: 0,
                 position: "relative",
-                animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.6s ease-out forwards") : "none",
-                animationDelay: visible ? `${0.2 + index * 0.12}s` : "0ms",
+                animation: visible ? (isMobile ? "fadeInUpMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" : "fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards") : "none",
+                animationDelay: visible ? `${0.15 + index * 0.14}s` : "0ms",
                 opacity: visible ? undefined : 0,
               }}
             >

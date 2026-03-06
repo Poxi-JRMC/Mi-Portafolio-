@@ -8,37 +8,56 @@ export default function ProjectCard({ title, description, image, sxCard }) {
         position: 'relative',
         borderRadius: '12px',
         overflow: 'hidden',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.35)',
-        border: '1px solid rgba(100,255,218,0.12)',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.35), 0 0 0 1px rgba(100,255,218,0.1)',
         cursor: 'pointer',
-        transition: 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease',
+        transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease',
         '&:hover': {
-          transform: 'translateY(-4px)',
-          borderColor: 'rgba(100,255,218,0.35)',
-          boxShadow: '0 12px 36px rgba(0,0,0,0.45)',
+          transform: 'translateY(-6px)',
+          boxShadow: '0 16px 48px rgba(0,0,0,0.5), 0 0 28px rgba(100,255,218,0.22)',
+          '& .card-img': { transform: 'scale(1.06)' },
+          '& .card-overlay': { opacity: 1 },
         },
         ...sxCard,
       }}
     >
-      <Box sx={{ overflow: 'hidden' }}>
+      <Box sx={{ overflow: 'hidden', position: 'relative' }}>
         <CardMedia
           component="img"
-          height="200"
+          height="210"
           image={image}
           alt={title}
           loading="lazy"
-          sx={{ transition: 'transform 0.4s ease', '&:hover': { transform: 'scale(1.04)' } }}
+          className="card-img"
+          sx={{ transition: 'transform 0.5s ease', display: 'block' }}
           onError={(e) => {
-            e.target.src = 'https://placehold.co/400x200/0a192f/64ffda?text=' + encodeURIComponent(title);
+            e.target.src = 'https://placehold.co/400x210/0a192f/64ffda?text=' + encodeURIComponent(title);
           }}
         />
+        <Box
+          className="card-overlay"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to top, rgba(10,25,47,0.85) 0%, transparent 55%)',
+            opacity: 0,
+            transition: 'opacity 0.35s ease',
+            display: 'flex',
+            alignItems: 'flex-end',
+            pb: 1.5,
+            pl: 2,
+          }}
+        >
+          <Typography sx={{ color: '#64ffda', fontSize: '0.82rem', fontWeight: 600, letterSpacing: 1 }}>
+            VER DETALLE →
+          </Typography>
+        </Box>
       </Box>
       <CardContent
         sx={{
           bgcolor: 'rgba(10,25,47,0.97)',
           px: 2.5,
           py: 2,
-          borderTop: '1px solid rgba(100,255,218,0.15)',
+          borderTop: '1px solid rgba(100,255,218,0.18)',
         }}
       >
         <Typography
