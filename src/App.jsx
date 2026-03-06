@@ -229,7 +229,7 @@ export default function App() {
           width: '100vw',
           height: '100vh',
           pointerEvents: 'none',
-          background: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(100,255,218,0.25) 0%, rgba(100,255,218,0.10) 25%, transparent 55%)`,
+          background: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(100,255,218,0.18) 0%, rgba(100,255,218,0.06) 18%, transparent 35%)`,
           transition: 'background 0.08s',
           zIndex: 5,
         }}
