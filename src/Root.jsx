@@ -5,6 +5,15 @@ import App from './App.jsx'
 
 const darkTheme = createTheme({
   palette: { mode: 'dark' },
+  typography: {
+    fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+    h5: { fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 },
+    h6: { fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600 },
+    overline: { fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, letterSpacing: 4 },
+    body1: { fontFamily: "'Space Grotesk', sans-serif" },
+    body2: { fontFamily: "'Space Grotesk', sans-serif" },
+    button: { fontFamily: "'Space Grotesk', sans-serif" },
+  },
 })
 
 export default function Root() {

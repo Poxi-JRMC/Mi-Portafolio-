@@ -448,13 +448,11 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
               fontFamily: "monospace",
               cursor: "pointer",
               textDecoration: "none",
-              boxShadow: "0 0 18px rgba(100, 255, 218, 0.15)",
-              transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
-              animation: "floatUpDown 3s ease-in-out infinite",
+              transition: "all 0.35s cubic-bezier(0.22, 1, 0.36, 1)",
               "&:hover": {
-                animationPlayState: "paused",
-                boxShadow: "0 0 30px rgba(100, 255, 218, 0.4)",
+                boxShadow: "0 0 28px rgba(100, 255, 218, 0.3)",
                 borderColor: "#64ffda",
+                transform: "translateY(-4px)",
               },
             }}
           >

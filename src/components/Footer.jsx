@@ -13,14 +13,14 @@ export const Footer = () => {
     <Box
       component="footer"
       sx={{
-        borderTop: "1px solid rgba(100, 255, 218, 0.2)",
-        py: 4,
+        borderTop: "1px solid rgba(100, 255, 218, 0.15)",
+        py: 3,
         px: { xs: 2, md: 4 },
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 2,
-        bgcolor: "rgba(10, 25, 47, 0.6)",
+        gap: 1.5,
+        bgcolor: "rgba(10, 25, 47, 0.5)",
       }}
     >
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
@@ -34,6 +34,7 @@ export const Footer = () => {
               size="small"
               sx={{
                 color: "#8892b0",
+                transition: "color 0.2s ease",
                 "&:hover": { color: "#64ffda" },
               }}
             >
@@ -42,47 +43,45 @@ export const Footer = () => {
           </Tooltip>
         ))}
       </Box>
-      <Typography
-        variant="body2"
-        sx={{
-          color: "#64ffda",
-          fontSize: "0.9rem",
-          fontWeight: 600,
-          letterSpacing: 2,
-          fontFamily: "'Inter', sans-serif",
-        }}
-      >
-        INNOVA - J.M.C.
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{
-          color: "#8892b0",
-          fontSize: "0.85rem",
-          fontFamily: "'Inter', sans-serif",
-        }}
-      >
-        Johan Raúl Mamani Cañari © {new Date().getFullYear()}
-      </Typography>
-      <Typography
-        component="a"
-        href="mailto:mamanijohan46@gmail.com"
-        sx={{
-          color: "#64ffda",
-          fontSize: "0.85rem",
-          fontFamily: "'Inter', sans-serif",
-          textDecoration: "none",
-          "&:hover": { textDecoration: "underline" },
-        }}
-      >
-        mamanijohan46@gmail.com
-      </Typography>
+
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flexWrap: "wrap", justifyContent: "center" }}>
+        <Typography
+          variant="body2"
+          sx={{ color: "#64ffda", fontSize: "0.85rem", fontWeight: 600, letterSpacing: 1.5 }}
+        >
+          INNOVA J.M.C.
+        </Typography>
+        <Typography variant="body2" sx={{ color: "rgba(100,255,218,0.3)", fontSize: "0.75rem" }}>
+          /
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#8892b0", fontSize: "0.82rem" }}>
+          Johan Raúl Mamani Cañari © {new Date().getFullYear()}
+        </Typography>
+        <Typography variant="body2" sx={{ color: "rgba(100,255,218,0.3)", fontSize: "0.75rem" }}>
+          /
+        </Typography>
+        <Typography
+          component="a"
+          href="mailto:mamanijohan46@gmail.com"
+          sx={{
+            color: "#8892b0",
+            fontSize: "0.82rem",
+            textDecoration: "none",
+            transition: "color 0.2s ease",
+            "&:hover": { color: "#64ffda" },
+          }}
+        >
+          mamanijohan46@gmail.com
+        </Typography>
+      </Box>
+
       <IconButton
         onClick={scrollToTop}
         size="small"
         sx={{
           color: "#64ffda",
-          "&:hover": { bgcolor: "rgba(100, 255, 218, 0.1)" },
+          mt: 0.5,
+          "&:hover": { bgcolor: "rgba(100, 255, 218, 0.08)" },
         }}
       >
         <KeyboardArrowUpIcon />

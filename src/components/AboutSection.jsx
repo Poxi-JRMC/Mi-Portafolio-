@@ -132,11 +132,9 @@ const AboutSection = ({ aboutBlocks, isMobile = false, scrollContainerRef, highl
                 transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1)",
                 height: "220px",
                 maxWidth: "100%",
-                boxShadow: "0 0 15px rgba(100, 255, 218, 0.2)",
                 "&:hover": {
                   transform: "scale(1.02)",
-                  boxShadow: "0 0 25px rgba(100, 255, 218, 0.4)",
-                  filter: "brightness(1.05)",
+                  boxShadow: "0 0 20px rgba(100, 255, 218, 0.3)",
                 },
                 [theme.breakpoints.between("md", "lg")]: {
                   height: "260px",

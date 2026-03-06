@@ -7,7 +7,6 @@ import {
   Tooltip,
   useMediaQuery,
   useTheme,
-  Slide,
   Fade,
 } from '@mui/material'
 import emailjs from '@emailjs/browser'
@@ -227,8 +226,6 @@ export default function App() {
         sx={{
           minHeight: '100vh',
           visibility: appReady ? 'visible' : 'hidden',
-          opacity: appReady ? 1 : 0,
-          transition: 'opacity 0.4s ease-out',
           bgcolor: '#121212',
           ...(isMobile && {
             height: '100vh',
@@ -254,14 +251,13 @@ export default function App() {
       />
 
       {/* CONTENEDOR DEL MENÚ LATERAL: posición = top, left | tamaño = width */}
-      <Slide direction="down" in={true} timeout={700}>
         <Box
           sx={{
             position: isMobile ? 'relative' : 'fixed',
-            top: isMobile ? 0 : 100,      // posición vertical (px desde arriba)
-            left: isMobile ? 0 : 190,     // posición horizontal (px desde la izquierda)
-            width: isMobile ? '100%' : 200,  // ancho del contenedor
-            minHeight: isMobile ? '100vh' : undefined,  // móvil: menú ocupa primera pantalla
+            top: isMobile ? 0 : 100,
+            left: isMobile ? 0 : 190,
+            width: isMobile ? '100%' : 200,
+            minHeight: isMobile ? '100vh' : undefined,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -270,6 +266,11 @@ export default function App() {
             py: isMobile ? 3 : 5,
             zIndex: 10,
             bgcolor: isMobile ? '#121212' : 'transparent',
+            animation: appReady
+              ? isMobile
+                ? 'mainContentEntrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both'
+                : 'sidebarEntrance 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both'
+              : 'none',
           }}
         >
           <Box
@@ -348,7 +349,7 @@ export default function App() {
                 <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mt: isMobile ? 2 : 0 }}>
                   <Box
                     component="img"
-                    src="/logo2.png"
+                    src="/logo2.webp"
                     alt="Mi pose"
                     fetchPriority="high"
                     sx={{
@@ -375,7 +376,7 @@ export default function App() {
                   <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                     <Box
                       component="img"
-                      src="/logo2.png"
+                      src="/logo2.webp"
                       alt="Mi pose"
                       fetchPriority="high"
                       sx={{
@@ -547,7 +548,6 @@ export default function App() {
             </Stack>
           </Box>
         </Box>
-      </Slide>
 
       <Box
         ref={mainRef}
@@ -562,6 +562,9 @@ export default function App() {
           color: '#ccd6f6',
           fontFamily: "'Inter', sans-serif",
           scrollBehavior: 'smooth',
+          animation: appReady
+            ? 'mainContentEntrance 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both'
+            : 'none',
         }}
       >
         <AboutSection aboutBlocks={aboutBlocks} isMobile={isMobile} scrollContainerRef={scrollContainerRef} highlightedSection={highlightedSection} />

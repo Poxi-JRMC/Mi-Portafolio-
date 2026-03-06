@@ -29,7 +29,7 @@ const ProjectDetail = ({ project, open, onClose }) => {
           bgcolor: hasBackground ? "transparent" : "rgba(11, 24, 26, 0.98)",
           border: "1px solid rgba(100, 255, 218, 0.3)",
           borderRadius: "16px",
-          boxShadow: "0 0 40px rgba(100, 255, 218, 0.15)",
+          boxShadow: "0 0 24px rgba(100, 255, 218, 0.08)",
           overflow: "hidden",
         },
       }}
@@ -230,11 +230,13 @@ const ProjectDetail = ({ project, open, onClose }) => {
                 variant="contained"
                 endIcon={<LaunchIcon />}
                 sx={{
-                  background: "linear-gradient(135deg, #64ffda, #0ff)",
-                  color: "#020508",
+                  bgcolor: "#64ffda",
+                  color: "#0a192f",
+                  fontWeight: 600,
+                  textTransform: "none",
                   "&:hover": {
-                    background: "linear-gradient(135deg, #0ff, #64ffda)",
-                    boxShadow: "0 0 20px rgba(100, 255, 218, 0.5)",
+                    bgcolor: "#52e0b8",
+                    boxShadow: "0 0 16px rgba(100, 255, 218, 0.35)",
                   },
                 }}
               >
