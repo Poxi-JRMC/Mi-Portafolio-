@@ -244,7 +244,7 @@ export default function App() {
           height: '100vh',
           bgcolor: '#121212',
           pointerEvents: 'none',
-          background: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(100,255,218,0.15), transparent 38%)`,
+          background: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(100,255,218,0.22) 0%, rgba(100,255,218,0.08) 30%, transparent 60%)`,
           transition: 'background 0.1s',
           zIndex: -1,
         }}
