@@ -31,6 +31,9 @@ const ProjectDetail = ({ project, open, onClose }) => {
           borderRadius: "16px",
           boxShadow: "0 0 24px rgba(100, 255, 218, 0.08)",
           overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "90vh",
         },
       }}
     >
@@ -49,204 +52,81 @@ const ProjectDetail = ({ project, open, onClose }) => {
         <CloseIcon />
       </IconButton>
 
-      <DialogContent sx={{ p: 0, overflow: "auto", position: "relative" }}>
-        {/* Fondo personalizado por proyecto (si existe) */}
+      {/* Área scrollable: imagen + info + capturas */}
+      <DialogContent sx={{ p: 0, overflowY: "auto", position: "relative", flex: 1 }}>
         {hasBackground && (
           <>
-            <Box
-              sx={{
-                position: "absolute",
-                inset: 0,
-                zIndex: 0,
-                backgroundImage: `url(${background})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-            <Box
-              sx={{
-                position: "absolute",
-                inset: 0,
-                zIndex: 1,
-                background: "linear-gradient(to bottom, rgba(10, 25, 47, 0.92) 0%, rgba(10, 25, 47, 0.97) 50%, rgba(10, 25, 47, 0.98) 100%)",
-              }}
-            />
+            <Box sx={{ position: "absolute", inset: 0, zIndex: 0, backgroundImage: `url(${background})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+            <Box sx={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(10,25,47,0.92) 0%, rgba(10,25,47,0.97) 50%, rgba(10,25,47,0.98) 100%)" }} />
           </>
         )}
 
-        {/* Contenido (encima del fondo) */}
         <Box sx={{ position: "relative", zIndex: 2 }}>
-        {/* Imagen principal */}
-        <Box
-          sx={{
-            width: "100%",
-            height: 240,
-            overflow: "hidden",
-            bgcolor: "#0a192f",
-            borderBottom: "1px solid rgba(100,255,218,0.2)",
-          }}
-        >
-          <Box
-            component="img"
-            src={image}
-            alt={title}
-            onError={(e) => {
-              e.target.src = "https://placehold.co/800x240/0a192f/64ffda?text=" + encodeURIComponent(title);
-            }}
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </Box>
+          <Box sx={{ width: "100%", height: 220, overflow: "hidden", bgcolor: "#0a192f", borderBottom: "1px solid rgba(100,255,218,0.2)" }}>
+            <Box component="img" src={image} alt={title}
+              onError={(e) => { e.target.src = "https://placehold.co/800x220/0a192f/64ffda?text=" + encodeURIComponent(title); }}
+              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </Box>
 
-        <Box sx={{ px: 3, py: 2.5 }}>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 700,
-              color: "#64ffda",
-              mb: 1.5,
-              fontFamily: "'Inter', sans-serif",
-              letterSpacing: 0.5,
-            }}
-          >
-            {title}
-          </Typography>
+          <Box sx={{ px: 3, pt: 2.5, pb: 1.5 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: "#64ffda", mb: 1.5, letterSpacing: 0.5 }}>
+              {title}
+            </Typography>
+            <Typography sx={{ color: "#a8b2d1", lineHeight: 1.75, fontSize: "1rem", mb: 2 }}>
+              {description}
+            </Typography>
 
-          <Typography
-            sx={{
-              color: "#a8b2d1",
-              lineHeight: 1.75,
-              fontSize: "1.02rem",
-              mb: 2,
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
-            {description}
-          </Typography>
+            {note && (
+              <Box sx={{ mb: 2, p: 1.5, borderRadius: 2, bgcolor: "rgba(100,255,218,0.08)", borderLeft: "3px solid #64ffda" }}>
+                <Typography sx={{ color: "#64ffda", fontSize: "0.9rem" }}>{note}</Typography>
+              </Box>
+            )}
 
-          {/* Nota destacada (ej: Carta de Amor - personalizable) */}
-          {note && (
-            <Box
-              sx={{
-                mb: 2,
-                p: 1.5,
-                borderRadius: 2,
-                bgcolor: "rgba(100, 255, 218, 0.08)",
-                borderLeft: "3px solid #64ffda",
-              }}
-            >
-              <Typography sx={{ color: "#64ffda", fontSize: "0.9rem", fontFamily: "'Inter', sans-serif" }}>
-                {note}
-              </Typography>
-            </Box>
-          )}
-
-          {/* Tech chips */}
-          {tech && tech.length > 0 && (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, mb: 2 }}>
-              {tech.map((t) => (
-                <Chip
-                  key={t}
-                  label={t}
-                  size="small"
-                  sx={{
-                    bgcolor: "rgba(100, 255, 218, 0.1)",
-                    color: "#64ffda",
-                    border: "1px solid rgba(100, 255, 218, 0.4)",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                />
-              ))}
-            </Box>
-          )}
-
-          {/* Screenshots mini gallery */}
-          {screenshots && screenshots.length > 0 && (
-            <Box sx={{ mb: 2 }}>
-              <Typography
-                variant="caption"
-                sx={{ color: "#8892b0", display: "block", mb: 1 }}
-              >
-                Capturas
-              </Typography>
-              <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 1 }}>
-                {screenshots.map((src, i) => (
-                  <Box
-                    key={i}
-                    component="img"
-                    src={src}
-                    alt={`Captura ${i + 1}`}
-                    sx={{
-                      height: 80,
-                      width: "auto",
-                      minWidth: 120,
-                      borderRadius: 1,
-                      objectFit: "cover",
-                      border: "1px solid rgba(100, 255, 218, 0.3)",
-                      cursor: "pointer",
-                      transition: "transform 0.2s",
-                      "&:hover": { transform: "scale(1.03)" },
-                    }}
-                    onClick={() => window.open(src, "_blank")}
-                  />
+            {tech && tech.length > 0 && (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, mb: 2 }}>
+                {tech.map((t) => (
+                  <Chip key={t} label={t} size="small" sx={{ bgcolor: "rgba(100,255,218,0.1)", color: "#64ffda", border: "1px solid rgba(100,255,218,0.4)" }} />
                 ))}
               </Box>
-            </Box>
-          )}
-
-          {/* Botones */}
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-            {link && (
-              <Button
-                component="a"
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="contained"
-                startIcon={<GitHubIcon />}
-                sx={{
-                  bgcolor: "rgba(100, 255, 218, 0.2)",
-                  color: "#64ffda",
-                  border: "1px solid #64ffda",
-                  "&:hover": {
-                    bgcolor: "rgba(100, 255, 218, 0.3)",
-                    borderColor: "#64ffda",
-                    boxShadow: "0 0 20px rgba(100, 255, 218, 0.4)",
-                  },
-                }}
-              >
-                Ver código (GitHub)
-              </Button>
             )}
-            {demo && (
-              <Button
-                component="a"
-                href={demo}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="contained"
-                endIcon={<LaunchIcon />}
-                sx={{
-                  bgcolor: "#64ffda",
-                  color: "#0a192f",
-                  fontWeight: 600,
-                  textTransform: "none",
-                  "&:hover": {
-                    bgcolor: "#52e0b8",
-                    boxShadow: "0 0 16px rgba(100, 255, 218, 0.35)",
-                  },
-                }}
-              >
-                Ver demo
-              </Button>
+
+            {screenshots && screenshots.length > 0 && (
+              <Box sx={{ mb: 1 }}>
+                <Typography variant="caption" sx={{ color: "#8892b0", display: "block", mb: 1 }}>Capturas</Typography>
+                <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 1 }}>
+                  {screenshots.map((src, i) => (
+                    <Box key={i} component="img" src={src} alt={`Captura ${i + 1}`}
+                      sx={{ height: 80, width: "auto", minWidth: 120, borderRadius: 1, objectFit: "cover", border: "1px solid rgba(100,255,218,0.3)", cursor: "pointer", transition: "transform 0.2s", "&:hover": { transform: "scale(1.03)" } }}
+                      onClick={() => window.open(src, "_blank")}
+                    />
+                  ))}
+                </Box>
+              </Box>
             )}
           </Box>
         </Box>
-        </Box>
       </DialogContent>
+
+      {/* Botones siempre visibles en la parte inferior */}
+      {(link || demo) && (
+        <Box sx={{ px: 3, py: 2, display: "flex", gap: 2, flexWrap: "wrap", borderTop: "1px solid rgba(100,255,218,0.15)", bgcolor: "rgba(10,25,47,0.98)", position: "relative", zIndex: 2 }}>
+          {link && (
+            <Button component="a" href={link} target="_blank" rel="noopener noreferrer" variant="contained" startIcon={<GitHubIcon />}
+              sx={{ bgcolor: "rgba(100,255,218,0.15)", color: "#64ffda", border: "1px solid rgba(100,255,218,0.5)", textTransform: "none", fontWeight: 600,
+                "&:hover": { bgcolor: "rgba(100,255,218,0.25)", boxShadow: "0 0 16px rgba(100,255,218,0.3)" } }}>
+              Ver código (GitHub)
+            </Button>
+          )}
+          {demo && (
+            <Button component="a" href={demo} target="_blank" rel="noopener noreferrer" variant="contained" endIcon={<LaunchIcon />}
+              sx={{ bgcolor: "#64ffda", color: "#0a192f", fontWeight: 600, textTransform: "none",
+                "&:hover": { bgcolor: "#52e0b8", boxShadow: "0 0 16px rgba(100,255,218,0.35)" } }}>
+              Ver demo
+            </Button>
+          )}
+        </Box>
+      )}
     </Dialog>
   );
 };
