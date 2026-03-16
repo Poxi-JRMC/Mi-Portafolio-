@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Typography, Box } from "@mui/material";
 import ProjectCard from "./ProjectCard";
+import { useT } from "../context/LanguageContext";
 
 const ProjectsSection = ({
   proyectosData,
@@ -10,6 +11,7 @@ const ProjectsSection = ({
   scrollContainerRef,
   highlightedSection,
 }) => {
+  const t = useT();
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -51,7 +53,7 @@ const ProjectsSection = ({
           opacity: visible ? undefined : 0,
         }}
       >
-        Proyectos
+        {t('projects.title')}
       </Typography>
 
       <Typography
@@ -66,7 +68,7 @@ const ProjectsSection = ({
           opacity: visible ? undefined : 0,
         }}
       >
-        Haz clic en un proyecto para ver el detalle, capturas y enlaces a GitHub.
+        {t('projects.subtitle')}
       </Typography>
 
       <Box
@@ -163,7 +165,7 @@ const ProjectsSection = ({
                     fontFamily: "'Inter', sans-serif",
                   }}
                 >
-                  {project.title}
+                  {t('projects.data')[project.id]?.title || project.title}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -174,7 +176,7 @@ const ProjectsSection = ({
                     fontFamily: "'Inter', sans-serif",
                   }}
                 >
-                  {project.description}
+                  {t('projects.data')[project.id]?.description || project.description}
                 </Typography>
               </Box>
             </Box>

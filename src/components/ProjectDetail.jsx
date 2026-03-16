@@ -11,11 +11,14 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LaunchIcon from "@mui/icons-material/Launch";
+import { useT } from "../context/LanguageContext";
 
 const ProjectDetail = ({ project, open, onClose }) => {
+  const t = useT();
   if (!project) return null;
 
-  const { title, description, image, background, link, demo, tech, screenshots, note } = project;
+  const { id, title, description, image, background, link, demo, tech, screenshots, note } = project;
+  const projTranslation = t('projects.data')[id]
   const hasBackground = !!background;
 
   return (
@@ -71,29 +74,29 @@ const ProjectDetail = ({ project, open, onClose }) => {
 
           <Box sx={{ px: 3, pt: 2.5, pb: 1.5 }}>
             <Typography variant="h5" sx={{ fontWeight: 700, color: "#64ffda", mb: 1.5, letterSpacing: 0.5 }}>
-              {title}
+              {projTranslation?.title || title}
             </Typography>
             <Typography sx={{ color: "#a8b2d1", lineHeight: 1.75, fontSize: "1rem", mb: 2 }}>
-              {description}
+              {projTranslation?.description || description}
             </Typography>
 
-            {note && (
+            {(projTranslation?.note || note) && (
               <Box sx={{ mb: 2, p: 1.5, borderRadius: 2, bgcolor: "rgba(100,255,218,0.08)", borderLeft: "3px solid #64ffda" }}>
-                <Typography sx={{ color: "#64ffda", fontSize: "0.9rem" }}>{note}</Typography>
+                <Typography sx={{ color: "#64ffda", fontSize: "0.9rem" }}>{projTranslation?.note || note}</Typography>
               </Box>
             )}
 
             {tech && tech.length > 0 && (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75, mb: 2 }}>
-                {tech.map((t) => (
-                  <Chip key={t} label={t} size="small" sx={{ bgcolor: "rgba(100,255,218,0.1)", color: "#64ffda", border: "1px solid rgba(100,255,218,0.4)" }} />
+                {tech.map((chip) => (
+                  <Chip key={chip} label={chip} size="small" sx={{ bgcolor: "rgba(100,255,218,0.1)", color: "#64ffda", border: "1px solid rgba(100,255,218,0.4)" }} />
                 ))}
               </Box>
             )}
 
             {screenshots && screenshots.length > 0 && (
               <Box sx={{ mb: 1 }}>
-                <Typography variant="caption" sx={{ color: "#8892b0", display: "block", mb: 1 }}>Capturas</Typography>
+                <Typography variant="caption" sx={{ color: "#8892b0", display: "block", mb: 1 }}>{t('detail.screenshots')}</Typography>
                 <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 1 }}>
                   {screenshots.map((src, i) => (
                     <Box key={i} component="img" src={src} alt={`Captura ${i + 1}`}
@@ -115,14 +118,14 @@ const ProjectDetail = ({ project, open, onClose }) => {
             <Button component="a" href={link} target="_blank" rel="noopener noreferrer" variant="contained" startIcon={<GitHubIcon />}
               sx={{ bgcolor: "rgba(100,255,218,0.15)", color: "#64ffda", border: "1px solid rgba(100,255,218,0.5)", textTransform: "none", fontWeight: 600,
                 "&:hover": { bgcolor: "rgba(100,255,218,0.25)", boxShadow: "0 0 16px rgba(100,255,218,0.3)" } }}>
-              Ver código (GitHub)
+              {t('detail.github')}
             </Button>
           )}
           {demo && (
             <Button component="a" href={demo} target="_blank" rel="noopener noreferrer" variant="contained" endIcon={<LaunchIcon />}
               sx={{ bgcolor: "#64ffda", color: "#0a192f", fontWeight: 600, textTransform: "none",
                 "&:hover": { bgcolor: "#52e0b8", boxShadow: "0 0 16px rgba(100,255,218,0.35)" } }}>
-              Ver demo
+              {t('detail.demo')}
             </Button>
           )}
         </Box>

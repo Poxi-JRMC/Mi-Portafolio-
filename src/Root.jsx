@@ -2,6 +2,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import './index.css'
 import App from './App.jsx'
+import { LanguageProvider } from './context/LanguageContext'
 
 const darkTheme = createTheme({
   palette: { mode: 'dark' },
@@ -18,9 +19,11 @@ const darkTheme = createTheme({
 
 export default function Root() {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </LanguageProvider>
   )
 }

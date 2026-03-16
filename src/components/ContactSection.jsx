@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import { FiSend } from "react-icons/fi";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import { useT } from "../context/LanguageContext";
 
 const inputSx = {
   "& .MuiOutlinedInput-root": {
@@ -16,6 +17,7 @@ const inputSx = {
 };
 
 export const ContactSection = ({ sendEmail, isMobile = false, scrollContainerRef, highlightedSection }) => {
+  const t = useT();
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -81,7 +83,7 @@ export const ContactSection = ({ sendEmail, isMobile = false, scrollContainerRef
               mb: 0.5,
             }}
           >
-            Contáctame
+            {t('contact.title')}
           </Typography>
 
           <Typography
@@ -92,12 +94,12 @@ export const ContactSection = ({ sendEmail, isMobile = false, scrollContainerRef
               mb: 1,
             }}
           >
-            Hagamos realidad tu proyecto 🚀
+            {t('contact.subtitle')}
           </Typography>
 
           <form id="contact-form" onSubmit={sendEmail}>
             <TextField
-              label="Nombre completo"
+              label={t('contact.name')}
               name="name"
               variant="outlined"
               fullWidth
@@ -106,7 +108,7 @@ export const ContactSection = ({ sendEmail, isMobile = false, scrollContainerRef
               sx={{ mb: 2, ...inputSx }}
             />
             <TextField
-              label="Correo electrónico"
+              label={t('contact.email')}
               name="email"
               type="email"
               variant="outlined"
@@ -116,7 +118,7 @@ export const ContactSection = ({ sendEmail, isMobile = false, scrollContainerRef
               sx={{ mb: 2, ...inputSx }}
             />
             <TextField
-              label="Mensaje"
+              label={t('contact.message')}
               name="message"
               multiline
               rows={4}
@@ -157,7 +159,7 @@ export const ContactSection = ({ sendEmail, isMobile = false, scrollContainerRef
                   },
                 }}
               >
-                Enviar
+                {t('contact.send')}
               </Button>
 
               <Button

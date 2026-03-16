@@ -25,12 +25,7 @@ import {
   technologies,
 } from './data/constants'
 import './App.css'
-
-const SIDEBAR_STRINGS = [
-  'ING. Johan Raul Mamani Cañari',
-  'Desarrollador Full Stack 💻',
-  'Apasionado por la tecnología 🚀',
-]
+import { useLang, useT } from './context/LanguageContext'
 
 export default function App() {
   const sendEmail = (e) => {
@@ -40,7 +35,7 @@ export default function App() {
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     console.log('EmailJS vars:', { serviceId, templateId, publicKey: publicKey ? 'OK' : 'UNDEFINED' })
     if (!serviceId || !templateId || !publicKey) {
-      alert('Error de configuración: variables de entorno no encontradas')
+      alert(t('contact.configError'))
       return
     }
     emailjs
@@ -48,12 +43,12 @@ export default function App() {
       .then(
         (result) => {
           console.log('Mensaje enviado ✅', result.text)
-          alert('Mensaje enviado con éxito!')
+          alert(t('contact.successMsg'))
           e.target.reset()
         },
         (error) => {
           console.log('Error ❌ completo:', error)
-          alert('Ocurrió un error, intenta de nuevo')
+          alert(t('contact.errorMsg'))
         }
       )
   }
@@ -70,6 +65,8 @@ export default function App() {
   const [appReady, setAppReady] = useState(false)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+  const { lang, toggle } = useLang()
+  const t = useT()
 
   useEffect(() => {
     const t = setTimeout(() => setAppReady(true), 2000)
@@ -182,6 +179,51 @@ export default function App() {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: '#121212', position: 'relative' }}>
+      {/* Switch de idioma ES | EN — fijo esquina superior derecha */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: { xs: 12, md: 16 },
+          right: { xs: 14, md: 20 },
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
+        }}
+      >
+        <Typography
+          onClick={() => lang !== 'es' && toggle()}
+          sx={{
+            cursor: lang === 'es' ? 'default' : 'pointer',
+            color: lang === 'es' ? '#64ffda' : '#8892b0',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            letterSpacing: 1,
+            transition: 'color 0.2s',
+            userSelect: 'none',
+            '&:hover': lang !== 'es' ? { color: '#ccd6f6' } : {},
+          }}
+        >
+          ES
+        </Typography>
+        <Typography sx={{ color: 'rgba(100,255,218,0.25)', fontSize: '0.7rem', userSelect: 'none' }}>|</Typography>
+        <Typography
+          onClick={() => lang !== 'en' && toggle()}
+          sx={{
+            cursor: lang === 'en' ? 'default' : 'pointer',
+            color: lang === 'en' ? '#64ffda' : '#8892b0',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            letterSpacing: 1,
+            transition: 'color 0.2s',
+            userSelect: 'none',
+            '&:hover': lang !== 'en' ? { color: '#ccd6f6' } : {},
+          }}
+        >
+          EN
+        </Typography>
+      </Box>
+
       {/* Splash: exactamente 2000 ms, animación suave, luego se oculta */}
       <Box
         sx={{
@@ -437,18 +479,15 @@ export default function App() {
                   {typewriterReady && (
                     isMobile ? (
                       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.3 }}>
-                        {SIDEBAR_STRINGS.map((s) => (
+                        {t('sidebar.strings').map((s) => (
                           <span key={s}>{s}</span>
                         ))}
                       </Box>
                     ) : (
                       <Typewriter
+                        key={lang}
                         options={{
-                          strings: [
-                            'ING. Johan Raul Mamani Cañari',
-                            'Desarrollador Full Stack 💻',
-                            'Apasionado por la tecnología 🚀',
-                          ],
+                          strings: t('sidebar.strings'),
                           autoStart: true,
                           loop: true,
                           delay: 140,
@@ -471,7 +510,10 @@ export default function App() {
               }}
             >
               <Stack spacing={isMobile ? 0.75 : 2} sx={{ width: '100%', mt: isMobile ? 0 : -2 }}>
-              {menuItems.map(({ id, label, icon }) => (
+              {menuItems.map(({ id, icon }) => {
+                const menuLabels = { about: t('menu.about'), experience: t('menu.experience'), projects: t('menu.projects'), contacto: t('menu.contact') }
+                const label = menuLabels[id] || id
+                return (
                 <Box
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -512,7 +554,8 @@ export default function App() {
                   {React.cloneElement(icon, { fontSize: 'medium' })}
                   {label}
                 </Box>
-              ))}
+              )
+            })}
               </Stack>
             </Box>
 

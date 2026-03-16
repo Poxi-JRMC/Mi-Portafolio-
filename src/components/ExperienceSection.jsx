@@ -3,11 +3,12 @@ import { Box, Typography, useTheme } from "@mui/material";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import BuildIcon from "@mui/icons-material/Build";
 import { supportBlocks } from "../data/constants";
+import { useT } from "../context/LanguageContext";
 
-const stats = [
-  { value: 3, suffix: "+", label: "Años de trayectoria técnica (desde 2023)" },
-  { value: 6, suffix: "", label: "Proyectos completados de alto impacto" },
-  { value: 8, suffix: "+", label: "Tecnologías dominadas profesionalmente" },
+const statsValues = [
+  { value: 3, suffix: "+" },
+  { value: 6, suffix: "" },
+  { value: 8, suffix: "+" },
 ];
 
 const useCountUp = (end, duration, start) => {
@@ -76,6 +77,7 @@ const StatCard = ({ value, suffix, label, index, visible, isMobile = false }) =>
 };
 
 const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef, highlightedSection }) => {
+  const t = useT();
   const sectionRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -133,7 +135,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
           opacity: sectionVisible ? undefined : 0,
         }}
       >
-        Experiencia
+        {t('experience.title')}
       </Typography>
 
       <Box
@@ -157,7 +159,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
             overflowWrap: "break-word",
           }}
         >
-          Inicié mi carrera en el sector tecnológico en 2022, enfocándome inicialmente en la infraestructura y el soporte técnico especializado. Esta etapa fue fundamental para desarrollar mi capacidad de análisis crítico y diagnóstico de sistemas. Posteriormente, evolucioné hacia el desarrollo Full Stack, trabajando en empresas como Quion Bolivia y JUSTO Solutions, donde he construido aplicaciones web escalables y accesibles utilizando el stack de React y Node.js.
+          {t('experience.p1')}
         </Typography>
         <Typography
           sx={{
@@ -169,7 +171,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
             overflowWrap: "break-word",
           }}
         >
-          Mi trabajo se caracteriza por un equilibrio entre el mantenimiento preventivo y la creación de nuevas funcionalidades digitales. En mi rol de soporte e infraestructura, logré una reducción del 30% en incidentes tecnológicos, optimizando los recursos de hardware y software de la organización. Hoy, aplico esa misma rigurosidad técnica al desarrollo frontend, asegurando que cada interfaz sea responsiva, rápida y esté lista para los desafíos del mercado actual.
+          {t('experience.p2')}
         </Typography>
       </Box>
 
@@ -187,7 +189,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
           opacity: sectionVisible ? undefined : 0,
         }}
       >
-        Soporte técnico e infraestructura
+        {t('experience.supportTitle')}
       </Typography>
       <Box
         sx={{
@@ -203,7 +205,9 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
           opacity: sectionVisible ? undefined : 0,
         }}
       >
-        {supportBlocks.map(({ id, img, alt }, i) => (
+        {supportBlocks.map(({ id, img }, i) => {
+          const altText = t('experience.supportAlt')[i] || ''
+          return (
           <Box
             key={id}
             sx={{
@@ -224,7 +228,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
             <Box
               component="img"
               src={img}
-              alt={alt}
+              alt={altText}
               loading="lazy"
               decoding="async"
               onError={(e) => {
@@ -270,11 +274,12 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
                   fontWeight: 600,
                 }}
               >
-                {alt}
+                {altText}
               </Typography>
             </Box>
           </Box>
-        ))}
+          )
+        })}
       </Box>
 
       <Typography
@@ -290,7 +295,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
           opacity: sectionVisible ? undefined : 0,
         }}
       >
-        Tecnologías que uso
+        {t('experience.techTitle')}
       </Typography>
 
       <Box
@@ -388,7 +393,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
           opacity: sectionVisible ? undefined : 0,
         }}
       >
-        En números
+        {t('experience.statsTitle')}
       </Typography>
       <Box
         sx={{
@@ -400,9 +405,10 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
           justifyContent: "center",
         }}
       >
-        {stats.map(({ value, suffix, label }, i) => (
-          <StatCard key={label} value={value} suffix={suffix} label={label} index={i} visible={statsVisible} isMobile={isMobile} />
-        ))}
+        {statsValues.map(({ value, suffix }, i) => {
+          const label = t('experience.statsLabels')[i] || ''
+          return <StatCard key={i} value={value} suffix={suffix} label={label} index={i} visible={statsVisible} isMobile={isMobile} />
+        })}
       </Box>
 
       <Box
@@ -458,10 +464,10 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
           >
             <PictureAsPdfIcon sx={{ fontSize: 48, mb: 1, opacity: 0.95 }} />
             <Typography sx={{ fontSize: "0.9rem", fontWeight: 600 }}>
-              CV Full Stack
+              {t('experience.cvTitle')}
             </Typography>
             <Typography sx={{ fontSize: "0.78rem", color: "#8892b0", mt: 0.5 }}>
-              Descargar
+              {t('experience.cvSub')}
             </Typography>
           </Box>
         </Box>
@@ -478,7 +484,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
               mb: 1.5,
             }}
           >
-            Metodología de Trabajo
+            {t('experience.methodTitle')}
           </Typography>
           <Box
             sx={{
@@ -497,8 +503,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
                 overflowWrap: "break-word",
               }}
             >
-              Mi enfoque combina diseño centrado en el usuario con desarrollo
-              eficiente, asegurando productos visualmente atractivos y técnicamente sólidos.
+              {t('experience.methodP1')}
             </Typography>
             <Typography
               sx={{
@@ -509,7 +514,7 @@ const ExperienceSection = ({ technologies, isMobile = false, scrollContainerRef,
                 overflowWrap: "break-word",
               }}
             >
-              Priorizo la comunicación clara, iteraciones rápidas y código mantenible.
+              {t('experience.methodP2')}
             </Typography>
           </Box>
         </Box>

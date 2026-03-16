@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
+import { useT } from "../context/LanguageContext";
 
 const AboutSection = ({ aboutBlocks, isMobile = false, scrollContainerRef, highlightedSection }) => {
   const theme = useTheme();
+  const t = useT();
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -46,10 +48,10 @@ const AboutSection = ({ aboutBlocks, isMobile = false, scrollContainerRef, highl
           opacity: visible ? undefined : 0,
         }}
       >
-        Sobre mí
+        {t('about.title')}
       </Typography>
 
-      {aboutBlocks.map(({ id, text, img, alt }, i) => (
+      {aboutBlocks.map(({ id, img, alt }, i) => (
         <Box
           key={id}
           sx={{
@@ -95,7 +97,7 @@ const AboutSection = ({ aboutBlocks, isMobile = false, scrollContainerRef, highl
                   overflowWrap: "break-word",
                 }}
               >
-                {text}
+                {t('about.blocks')[i]}
               </Typography>
             </Box>
           </Box>
