@@ -184,7 +184,7 @@ export default function App() {
         sx={{
           position: 'fixed',
           top: { xs: 12, md: 16 },
-          right: { xs: 14, md: 20 },
+          right: { xs: 50, md: 210 },
           zIndex: 9999,
           display: 'flex',
           alignItems: 'center',
@@ -400,12 +400,12 @@ export default function App() {
                     fetchPriority="high"
                     sx={{
                       position: 'relative',
-                      height: { xs: 200, sm: 240, md: 280 },
+                      height: { xs: 230, sm: 270, md: 320 },
                       width: 'auto',
                       borderRadius: 5,
                       objectFit: 'contain',
                       ml: isMobile ? 1.5 : 3,
-                      mt: isMobile ? -4 : -6,
+                      mt: isMobile ? -6 : -10,
                       zIndex: 2,
                       animation: 'entrancePhoto 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both',
                       transition: 'transform 0.3s ease, filter 0.3s ease',
@@ -427,12 +427,12 @@ export default function App() {
                       fetchPriority="high"
                       sx={{
                         position: 'relative',
-                        height: { xs: 200, sm: 240, md: 280 },
+                        height: { xs: 230, sm: 270, md: 320 },
                         width: 'auto',
                         borderRadius: 5,
                         objectFit: 'contain',
                         ml: isMobile ? 0 : 3,
-                        mt: isMobile ? -4 : -7,
+                        mt: isMobile ? -6 : -10,
                         zIndex: 2,
                         transition: 'transform 0.3s ease, filter 0.3s ease',
                         filter: 'drop-shadow(0 0 8px rgba(100, 255, 218, 0.9)) drop-shadow(0 0 10px rgba(100, 255, 218, 0.9))',
