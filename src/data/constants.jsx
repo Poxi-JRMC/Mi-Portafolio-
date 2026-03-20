@@ -154,6 +154,24 @@ export const proyectosData = [
   },
   {
     id: 5,
+    title: 'Innova JMC - Landing corporativa',
+    description:
+      'Landing page corporativa para Innova J.M.C.: servicios, proyectos en producción, proceso de trabajo y contacto (WhatsApp/Email). Stack Next.js (App Router), TypeScript, Tailwind CSS v4, Framer Motion e internacionalización ES/EN con next-intl. En desarrollo activo, casi listo para producción final.',
+    image: 'https://raw.githubusercontent.com/Poxi-JRMC/web-innovajmc/main/1portafolio.webp',
+    background: 'https://raw.githubusercontent.com/Poxi-JRMC/web-innovajmc/main/1portafolio.webp',
+    link: 'https://github.com/Poxi-JRMC/web-innovajmc',
+    demo: 'https://innova-jmc-landing-page.vercel.app/',
+    tech: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'next-intl', 'EmailJS'],
+    screenshots: [
+      'https://raw.githubusercontent.com/Poxi-JRMC/web-innovajmc/main/1portafolio.webp',
+      'https://raw.githubusercontent.com/Poxi-JRMC/web-innovajmc/main/2portafolio.webp',
+      'https://raw.githubusercontent.com/Poxi-JRMC/web-innovajmc/main/3portafolio.webp',
+      'https://raw.githubusercontent.com/Poxi-JRMC/web-innovajmc/main/4portafolio.webp',
+      'https://raw.githubusercontent.com/Poxi-JRMC/web-innovajmc/main/5portafolio.webp',
+    ],
+  },
+  {
+    id: 6,
     title: 'QUION Bolivia - Sitio Corporativo',
     description: 'Sitio web corporativo para empresa boliviana de producción y exportación de quinua en Oruro (Challapata). Diseño institucional responsivo con identidad de marca, desplegado en Vercel.',
     image: '/QUION_BO.png',
@@ -164,7 +182,7 @@ export const proyectosData = [
     screenshots: [],
   },
   {
-    id: 6,
+    id: 7,
     title: 'Cajero Automático',
     description: 'Proyecto universitario. Sistema de cajero con Python, Tkinter, Oracle DB: autenticación por PIN y voz, operaciones bancarias, panel admin y reportes PDF.',
     image: '/cajero-automatico.webp',
@@ -175,7 +193,7 @@ export const proyectosData = [
     screenshots: [],
   },
   {
-    id: 7,
+    id: 8,
     title: 'Carta de Amor',
     description: 'Carta digital interactiva para el 14 de febrero con React y Material UI: galería de fotos y música, desplegada en Vercel.',
     note: 'Personalizable: edita nombres y fotos en el código del proyecto para dedicarlo a quien quieras.',

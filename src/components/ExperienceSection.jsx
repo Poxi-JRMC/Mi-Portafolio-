@@ -7,7 +7,7 @@ import { useT } from "../context/LanguageContext";
 
 const statsValues = [
   { value: 3, suffix: "+" },
-  { value: 6, suffix: "" },
+  { value: 7, suffix: "" },
   { value: 8, suffix: "+" },
 ];
 
