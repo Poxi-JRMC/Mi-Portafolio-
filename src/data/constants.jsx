@@ -138,13 +138,26 @@ export const proyectosData = [
     id: 4,
     title: 'INNOVA - Sistema de Inventarios',
     description:
-      'Sistema web de inventario y gestión de stock para INNOVA J.M.C.: productos, movimientos, alertas y reportes en tiempo real. Frontend React con interfaz clara; backend con API REST, autenticación y base de datos relacional. Repositorio privado por datos sensibles del negocio.',
-    image: '/inventario-innova.svg',
-    background: '/inventario-innova.svg',
-    link: 'https://github.com/Poxi-JRMC/Innova-INVENTARIOS-priv',
+      'Sistema de inventario y punto de venta (POS) para comercios: stock en tiempo real, caja con arqueo, movimientos, reportes PDF y usuarios por roles. Stack React 19, TypeScript, Vite, Tailwind CSS, FastAPI, SQLite y JWT. Documentación y capturas en el repositorio público; el código fuente permanece en el repo privado del proyecto.',
+    image:
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/1in.png',
+    background:
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/2in.png',
+    link: 'https://github.com/Poxi-JRMC/Innova-INVENTARIOS-public',
     demo: null,
-    tech: ['React', 'FastAPI', 'PostgreSQL', 'JWT', 'Material UI'],
-    screenshots: [],
+    tech: ['React', 'TypeScript', 'FastAPI', 'SQLite', 'Tailwind CSS', 'JWT'],
+    screenshots: [
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/1in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/2in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/3in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/4in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/5in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/6in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/7in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/8in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/9in.png',
+      'https://raw.githubusercontent.com/Poxi-JRMC/Innova-INVENTARIOS-public/main/assets/screenshots/10in.png',
+    ],
   },
   {
     id: 5,
