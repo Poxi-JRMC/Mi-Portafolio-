@@ -20,15 +20,33 @@ export default function ProjectCard({ title, description, image, sxCard }) {
         ...sxCard,
       }}
     >
-      <Box sx={{ overflow: 'hidden', position: 'relative' }}>
+      <Box
+        sx={{
+          overflow: 'hidden',
+          position: 'relative',
+          width: '100%',
+          height: 210,
+          bgcolor: '#0a192f',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <CardMedia
           component="img"
-          height="210"
           image={image}
           alt={title}
           loading="lazy"
+          decoding="async"
           className="card-img"
-          sx={{ transition: 'transform 0.5s ease', display: 'block' }}
+          sx={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center center',
+            transition: 'transform 0.5s ease',
+            display: 'block',
+          }}
           onError={(e) => {
             e.target.src = 'https://placehold.co/400x210/0a192f/64ffda?text=' + encodeURIComponent(title);
           }}

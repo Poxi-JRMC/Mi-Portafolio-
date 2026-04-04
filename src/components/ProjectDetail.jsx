@@ -65,10 +65,33 @@ const ProjectDetail = ({ project, open, onClose }) => {
         )}
 
         <Box sx={{ position: "relative", zIndex: 2 }}>
-          <Box sx={{ width: "100%", height: 220, overflow: "hidden", bgcolor: "#0a192f", borderBottom: "1px solid rgba(100,255,218,0.2)" }}>
-            <Box component="img" src={image} alt={title}
-              onError={(e) => { e.target.src = "https://placehold.co/800x220/0a192f/64ffda?text=" + encodeURIComponent(title); }}
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+          <Box
+            sx={{
+              width: "100%",
+              height: { xs: 220, sm: 248 },
+              overflow: "hidden",
+              bgcolor: "#0a192f",
+              borderBottom: "1px solid rgba(100,255,218,0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              component="img"
+              src={image}
+              alt={title}
+              loading="lazy"
+              decoding="async"
+              onError={(e) => {
+                e.target.src = "https://placehold.co/800x248/0a192f/64ffda?text=" + encodeURIComponent(title);
+              }}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                objectPosition: "center center",
+              }}
             />
           </Box>
 
@@ -97,12 +120,61 @@ const ProjectDetail = ({ project, open, onClose }) => {
             {screenshots && screenshots.length > 0 && (
               <Box sx={{ mb: 1 }}>
                 <Typography variant="caption" sx={{ color: "#8892b0", display: "block", mb: 1 }}>{t('detail.screenshots')}</Typography>
-                <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1.25,
+                    overflowX: "auto",
+                    pb: 1,
+                    WebkitOverflowScrolling: "touch",
+                    "&::-webkit-scrollbar": { height: 6 },
+                    "&::-webkit-scrollbar-thumb": { bgcolor: "rgba(100,255,218,0.25)", borderRadius: 3 },
+                  }}
+                >
                   {screenshots.map((src, i) => (
-                    <Box key={i} component="img" src={src} alt={`Captura ${i + 1}`}
-                      sx={{ height: 80, width: "auto", minWidth: 120, borderRadius: 1, objectFit: "cover", border: "1px solid rgba(100,255,218,0.3)", cursor: "pointer", transition: "transform 0.2s", "&:hover": { transform: "scale(1.03)" } }}
+                    <Box
+                      key={`${src}-${i}`}
                       onClick={() => window.open(src, "_blank")}
-                    />
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => e.key === "Enter" && window.open(src, "_blank")}
+                      sx={{
+                        flex: "0 0 auto",
+                        width: 200,
+                        height: 120,
+                        borderRadius: 1,
+                        bgcolor: "rgba(0,0,0,0.35)",
+                        border: "1px solid rgba(100,255,218,0.3)",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                        transition: "transform 0.2s, box-shadow 0.2s",
+                        "&:hover": {
+                          transform: "translateY(-2px)",
+                          boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
+                        },
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        src={src}
+                        alt={`Captura ${i + 1}`}
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          e.target.style.opacity = 0.35;
+                        }}
+                        sx={{
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          width: "auto",
+                          height: "auto",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Box>
                   ))}
                 </Box>
               </Box>

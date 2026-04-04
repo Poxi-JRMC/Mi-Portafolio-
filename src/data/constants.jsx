@@ -136,6 +136,18 @@ export const proyectosData = [
   },
   {
     id: 4,
+    title: 'INNOVA - Sistema de Inventarios',
+    description:
+      'Sistema web de inventario y gestión de stock para INNOVA J.M.C.: productos, movimientos, alertas y reportes en tiempo real. Frontend React con interfaz clara; backend con API REST, autenticación y base de datos relacional. Repositorio privado por datos sensibles del negocio.',
+    image: '/inventario-innova.svg',
+    background: '/inventario-innova.svg',
+    link: 'https://github.com/Poxi-JRMC/Innova-INVENTARIOS-priv',
+    demo: null,
+    tech: ['React', 'FastAPI', 'PostgreSQL', 'JWT', 'Material UI'],
+    screenshots: [],
+  },
+  {
+    id: 5,
     title: 'MigloPet - Landing Web',
     description: 'Rediseño minimalista de la landing page para MigloPet, tienda de mascotas. Incluye pantalla de carga, secciones de inicio, categorías, productos, nosotros y contacto. Stack moderno con Next.js, TypeScript, Tailwind CSS y Framer Motion.',
     image: 'https://raw.githubusercontent.com/Poxi-JRMC/Miglopet--INNOVA-JMC/main/inicio.png',
@@ -153,7 +165,7 @@ export const proyectosData = [
     ],
   },
   {
-    id: 5,
+    id: 6,
     title: 'Innova JMC - Landing corporativa',
     description:
       'Landing page corporativa para Innova J.M.C.: servicios, proyectos en producción, proceso de trabajo y contacto (WhatsApp/Email). Stack Next.js (App Router), TypeScript, Tailwind CSS v4, Framer Motion e internacionalización ES/EN con next-intl. En desarrollo activo, casi listo para producción final.',
@@ -171,7 +183,7 @@ export const proyectosData = [
     ],
   },
   {
-    id: 6,
+    id: 7,
     title: 'QUION Bolivia - Sitio Corporativo',
     description: 'Sitio web corporativo para empresa boliviana de producción y exportación de quinua en Oruro (Challapata). Diseño institucional responsivo con identidad de marca, desplegado en Vercel.',
     image: '/QUION_BO.png',
@@ -182,7 +194,7 @@ export const proyectosData = [
     screenshots: [],
   },
   {
-    id: 7,
+    id: 8,
     title: 'Cajero Automático',
     description: 'Proyecto universitario. Sistema de cajero con Python, Tkinter, Oracle DB: autenticación por PIN y voz, operaciones bancarias, panel admin y reportes PDF.',
     image: '/cajero-automatico.webp',
@@ -193,7 +205,7 @@ export const proyectosData = [
     screenshots: [],
   },
   {
-    id: 8,
+    id: 9,
     title: 'Carta de Amor',
     description: 'Carta digital interactiva para el 14 de febrero con React y Material UI: galería de fotos y música, desplegada en Vercel.',
     note: 'Personalizable: edita nombres y fotos en el código del proyecto para dedicarlo a quien quieras.',
